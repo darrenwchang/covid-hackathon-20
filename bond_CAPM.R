@@ -84,7 +84,7 @@ bonds_all <-
 #                 delim = ',',
 #                 col_names = T)
 
-bonds_all <- vroom('bonds_all_date.csv')
+bonds_all <- vroom("C:\\Users\\darre\\Documents\\_econ\\bonds_all_date.csv") # read csv
 
 ## ---- CAPM Calculations
 #use tidy quant to obtain yield data
@@ -155,7 +155,7 @@ bonds_sample <-
                                         grepl('Detroit', project_name_c) ~ 'DET',
                                         grepl('Houston', project_name_c) ~ 'HOU')) %>% 
                 group_by(city) %>% 
-                mutate(beta_2 = cov(offering_yield_f, r_m)) %>% 
+                mutate(beta_2 = cov(offering_yield_f, r_m)/ var(r_m)) %>% 
                 select(beta_2, city, everything())
 
 bonds_sample %>% 
@@ -168,4 +168,4 @@ vroom_write(bonds_sample, 'bonds_sample.csv',
                 delim = ',',
                 col_names = T)
 
-bonds_sample <- vroom('bonds_sample.csv')
+# onds_sample <- vroom('bonds_sample.csv')
