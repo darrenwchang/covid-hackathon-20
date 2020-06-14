@@ -84,12 +84,6 @@ vroom_write(bonds_all, 'bonds_all_date.csv',
 
 bonds_all <- vroom('bonds_all_date.csv')
 
-bonds_rm <- 
-        bonds_all %>% 
-                select(total_maturity_offering_amt_f, offering_yield_f, offering_price_f) %>% 
-                mutate(weight = total_maturity_offering_amt_f*offering_yield_f*offering_price_f/100) %>% 
-                summarize(r_m = sum(weight, na.rm = T)/sum(total_maturity_offering_amt_f, na.rm = T))
-
 #use tidy quant to obtain yield data
 yield_tickers <- c('DGS1MO', 'DGS3MO', 'DGS6MO', 'DGS1', 'DGS2', 'DGS3', 'DGS5', 'DGS7', 'DGS10', 'DGS20', 'DGS30')
 yield <- tq_get(yield_tickers, get = 'economic.data', from = "1970-01-01")
@@ -112,7 +106,8 @@ bonds_all <-
                                         bond_maturity > 0.167 & bond_maturity < 0.375 ~ 'DGS3MO',
                                         bond_maturity < 0.167 ~ 'DGS1MO')) %>% 
                 select(maturity, everything()) %>% 
-                inner_join(yield, c('maturity' = 'symbol', 'settlement_date_d' = 'date'))
+                inner_join(yield, c('maturity' = 'symbol', 'settlement_date_d' = 'date')) %>% 
+                mutate(maturity_year = format(settlement_date_d, '%Y')) %>% 
 end_time <- Sys.time()
 end_time - start_time
 
@@ -124,19 +119,56 @@ vroom_write(bonds_all, 'bonds_all_date.csv',
 # calculate market rate of return
 bonds_rm <- 
         bonds_all %>% 
-                select(maturity, total_maturity_offering_amt_f, offering_yield_f, offering_price_f) %>%
-                group_by(maturity) %>% 
+                select(maturity, total_maturity_offering_amt_f, offering_yield_f, offering_price_f, settlement_date_d) %>%
+                group_by(maturity, maturity_year) %>% 
                 mutate(weight = total_maturity_offering_amt_f*offering_yield_f*offering_price_f/100) %>% 
                 summarize(r_m = sum(weight, na.rm = T)/sum(total_maturity_offering_amt_f, na.rm = T))
 
 # calculate beta
 start_time <- Sys.time()
 bonds_all <- 
-        bonds_all %>% 
-        inner_join(bonds_rm, by = 'maturity') %>% 
+        bonds_all %>%
+        select(r_m) %>% 
+        inner_join(bonds_rm, by = c('maturity', 'maturity_year')) %>% 
         mutate(beta = (offering_yield_f - price)/(r_m - price)) %>% 
         select(beta, price, offering_yield_f, r_m, everything()) %>% 
-        drop_na(beta) %>% 
-        filter(beta >= 0)
+        drop_na(beta)
 end_time <- Sys.time()
 end_time - start_time
+
+bonds_sample <- 
+        bonds_all %>% 
+                filter(grepl('New York|Allentown|Los Angeles|Detroit|Houston', 
+                        project_name_c)) %>%
+                filter(maturity_date_d > '2020-06-14')
+
+bonds_sample %>%
+        filter(grepl('Houston', project_name_c)) %>%
+        summarize(amt = sum(total_maturity_offering_amt_f,
+                        na.rm = T))
+        # nrow()
+bonds_sample %>% 
+        filter(grepl('New York', project_name_c)) %>%
+        summarize(amt = sum(total_maturity_offering_amt_f, 
+                        na.rm = T))
+        # nrow()
+bonds_sample %>% 
+        filter(grepl('Los Angeles', project_name_c)) %>% 
+        summarize(amt = sum(total_maturity_offering_amt_f,
+                        na.rm = T))
+        # nrow()
+bonds_sample %>% 
+        filter(grepl('Detroit', project_name_c)) %>%
+        summarize(amt = sum(total_maturity_offering_amt_f,
+                        na.rm = T))
+        # nrow()
+bonds_sample %>% 
+        filter(grepl('Allentown', project_name_c)) %>% 
+        summarize(amt = sum(total_maturity_offering_amt_f,
+                        na.rm = T))
+        # nrow()
+
+vroom_write(bonds_sample, 'bonds_sample.csv', 
+                delim = ',',
+                col_names = T)
+                end_time <- Sys.time()
