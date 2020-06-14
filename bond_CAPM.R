@@ -7,7 +7,7 @@ library(vroom)
 library(tidyquant)
 
 setwd("C:\\Users\\darre\\Documents\\_econ\\covid-hackathon-20")
-bonds_all <- vroom("C:\\Users\\darre\\Documents\\_econ\\covid-hackathon-20\\bondinfo.csv") # read csv
+bonds_all <- vroom("C:\\Users\\darre\\Documents\\_econ\\bondinfo.csv") # read csv
 bonds_all <- 
         bonds_all %>% 
         rename(issue_id_i = v1, 
@@ -163,3 +163,5 @@ bonds_sample %>%
 vroom_write(bonds_sample, 'bonds_sample.csv', 
                 delim = ',',
                 col_names = T)
+
+bonds_sample <- vroom('bonds_sample.csv')
