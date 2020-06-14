@@ -7,6 +7,8 @@ library(vroom)
 library(tidyquant)
 
 setwd("C:\\Users\\darre\\Documents\\_econ\\covid-hackathon-20")
+
+## --- CLEANING
 bonds_all <- vroom("C:\\Users\\darre\\Documents\\_econ\\bondinfo.csv") # read csv
 bonds_all <- 
         bonds_all %>% 
@@ -84,6 +86,7 @@ bonds_all <-
 
 bonds_all <- vroom('bonds_all_date.csv')
 
+## ---- CAPM Calculations
 #use tidy quant to obtain yield data
 yield_tickers <- c('DGS1MO', 'DGS3MO', 'DGS6MO', 'DGS1', 'DGS2', 'DGS3', 'DGS5', 'DGS7', 'DGS10', 'DGS20', 'DGS30')
 yield <- tq_get(yield_tickers, get = 'economic.data', from = "1970-01-01")
@@ -137,6 +140,7 @@ bonds_all <-
 end_time <- Sys.time()
 end_time - start_time
 
+## ---- SAMPLING
 bonds_sample <- 
         bonds_all %>% 
                 filter(grepl('New York|Allentown|Los Angeles|Detroit|Houston', 
