@@ -1,3 +1,7 @@
+# refinancing data
+# Michael Wang
+# COVID-19 Policy Hackathon
+
 setwd("~/Downloads")
 mydata = read.csv("bonds_sample.csv") %>% 
     as_tibble() %>% 
@@ -5,7 +9,7 @@ mydata = read.csv("bonds_sample.csv") %>%
     rename(beta = beta_2)
 ​
 # merge_dum = data.frame("maturity" = c("DGS10","DGS20","DGS3","DGS30","DGS5","DGS7"), 
-    "qe_effect" = c(-0.16982,-0.03818,-0.15636,0,-0.13255,-0.222))
+#    "qe_effect" = c(-0.16982,-0.03818,-0.15636,0,-0.13255,-0.222))
 
 merge_dum = data.frame("maturity" = c("DGS10","DGS20","DGS3","DGS30","DGS5","DGS7"), 
     "qe_effect" = c(-0.0636,-0.0103,-0.3191,0,-0.1194,-0.12))
