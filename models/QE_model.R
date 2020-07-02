@@ -5,8 +5,8 @@
 library(magrittr)
 library(tidyverse)
 
-setwd("~/Downloads")
-mydata = read.csv("qe2_effects.csv") %>% 
+setwd("../data")
+mydata <- read.csv("qe2_effects.csv") %>% 
     as_tibble() %>% 
     filter(abs(time) <= 10) %>% 
     mutate(announce = (time > 0))

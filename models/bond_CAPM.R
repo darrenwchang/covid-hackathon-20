@@ -6,10 +6,10 @@ library(tidyverse)
 library(vroom)
 library(tidyquant)
 
-setwd("C:\\Users\\darre\\Documents\\_econ\\covid-hackathon-20")
+setwd("../../")
 
 ## --- CLEANING
-bonds_all <- vroom("C:\\Users\\darre\\Documents\\_econ\\bondinfo.csv") # read csv
+bonds_all <- vroom("C:\\Users\\darre\\Documents\\_econ\\covid policy hackathon_2020\\bondinfo.csv") # read csv
 bonds_all <- 
         bonds_all %>% 
         rename(issue_id_i = v1, 
@@ -84,7 +84,7 @@ bonds_all <-
 #                 delim = ',',
 #                 col_names = T)
 
-bonds_all <- vroom("C:\\Users\\darre\\Documents\\_econ\\bonds_all_date.csv") # read csv
+bonds_all <- vroom("C:\Users\darre\Documents\_econ\covid policy hackathon_2020\bonds_all_date.csv") # read csv
 
 ## ---- CAPM Calculations
 #use tidy quant to obtain yield data
@@ -168,4 +168,4 @@ vroom_write(bonds_sample, 'bonds_sample.csv',
                 delim = ',',
                 col_names = T)
 
-# onds_sample <- vroom('bonds_sample.csv')
+# bonds_sample <- vroom('bonds_sample.csv')
